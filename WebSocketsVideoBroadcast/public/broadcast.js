@@ -21,11 +21,13 @@ navigator.mediaDevices
     .getUserMedia(constraints)
     .then(stream => {
         video.srcObject = stream;
+        console.log('emmiting broadcaster');
         socket.emit("broadcaster");
     })
     .catch(error => console.error(error));
 
 socket.on("watcher", id => {
+    console.log('got watcher');
     const peerConnection = new RTCPeerConnection(config);
     peerConnections[id] = peerConnection;
 
@@ -34,6 +36,7 @@ socket.on("watcher", id => {
 
     peerConnection.onicecandidate = event => {
         if (event.candidate) {
+            console.log('emitting candidate');
             socket.emit("candidate", id, event.candidate);
         }
     };
@@ -42,15 +45,18 @@ socket.on("watcher", id => {
         .createOffer()
         .then(sdp => peerConnection.setLocalDescription(sdp))
         .then(() => {
+            console.log('emitting offer');
             socket.emit("offer", id, peerConnection.localDescription);
         });
 });
 
 socket.on("answer", (id, description) => {
+    console.log('got answer');
     peerConnections[id].setRemoteDescription(description);
 });
 
 socket.on("candidate", (id, candidate) => {
+    console.log('got candidate');
     peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate));
 });
 
