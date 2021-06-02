@@ -9,7 +9,47 @@ const config = {
 
 const socket = io.connect(window.location.origin);
 const videos = document.querySelectorAll("video");
+const canvases = document.querySelectorAll("canvas");
+const contexts = []
+canvases.forEach((canvas, index) => {
+    contexts[index] = canvas.getContext("2d");
+})
+
+let model;
 let connectionCounter = 0;
+
+const detectFaces = (video, counter) => {
+    return async function() {
+        const prediction = await model.estimateFaces(video, false);
+        console.log(prediction);
+        contexts[counter-1].drawImage(video, 0, 0, 600, 400);
+        let ctx = contexts[counter-1];
+        prediction.forEach((pred) => {
+            ctx.beginPath();
+            ctx.lineWidth = "4";
+            ctx.rect(
+                pred.topLeft[0],
+                pred.topLeft[1],
+                pred.bottomRight[0] - pred.topLeft[0],
+                pred.bottomRight[1] - pred.topLeft[1]
+            );
+            ctx.stroke();
+
+            ctx.fillStyle = "red";
+            pred.landmarks.forEach((landmark) => {
+                ctx.fillRect(landmark[0], landmark[1], 5, 5);
+            })
+        });
+    }
+}
+
+videos.forEach((video) => {
+    video.addEventListener("loadeddata", async() => {
+        model = await blazeface.load();
+        const videoInstance = connectionCounter;
+        setInterval(detectFaces(video, videoInstance), 40);
+    })
+})
 
 socket.on("offer", (id, description) => {
     console.log('got offer');
@@ -24,6 +64,8 @@ socket.on("offer", (id, description) => {
         });
     peerConnection.ontrack = event => {
         videos[connectionCounter-1].srcObject = event.streams[0];
+
+
         console.log('got connection');
     };
     peerConnection.onicecandidate = event => {

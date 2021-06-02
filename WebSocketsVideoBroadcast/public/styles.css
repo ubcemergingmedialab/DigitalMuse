@@ -11,6 +11,14 @@ html {
     object-fit: cover;
   }
   
+  canvas {
+      width: 25%;
+      height: 25%;
+      position: relative;
+      display: block;
+      object-fit: cover;
+  }
+  
   body {
     background-color: black;
     margin: 0;
