@@ -8,17 +8,28 @@
 <body>
 <video id="video1" playsinline autoplay></video>
 <video id="video2" playsinline autoplay></video>
+<video id="video3" playsinline autoplay></video>
+<video id="video4" playsinline autoplay></video>
+<video id="video5" playsinline autoplay></video>
+<video id="video6" playsinline autoplay></video>
 
+<canvas id="canvas1" width="600px" height="400px"></canvas>
+<canvas id="canvas2" width="600px" height="400px"></canvas>
 <canvas id="canvas3" width="600px" height="400px"></canvas>
 <canvas id="canvas4" width="600px" height="400px"></canvas>
+<canvas id="canvas5" width="600px" height="400px"></canvas>
+<canvas id="canvas6" width="600px" height="400px"></canvas>
+<canvas id="finalCanvas" width="600px" height="400px"></canvas>
 
 <img src="/head_in_the_hole.jpg" alt="">
 
 <script src="https://unpkg.com/@tensorflow/tfjs-core@2.4.0/dist/tf-core.js"></script>
 <script src="https://unpkg.com/@tensorflow/tfjs-converter@2.4.0/dist/tf-converter.js"></script>
-<script src="https://unpkg.com/@tensorflow/tfjs-backend-webgl@2.4.0/dist/tf-backend-webgl.js"></script>
+<script src="https://unpkg.com/@tensorflow/tfjs-backend-wasm@2.4.0/dist/tf-backend-wasm.js"></script>
 <script src="https://unpkg.com/@tensorflow-models/face-landmarks-detection@0.0.1/dist/face-landmarks-detection.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/watch.js"></script>
+
+<button id="start">Click here to start Connection</button>
 </body>
 </html>
