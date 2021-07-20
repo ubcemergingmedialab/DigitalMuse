@@ -7,7 +7,7 @@ const config = {
     ]
 };
 
-const socket = io.connect(window.location.origin);
+
 const videos = document.querySelectorAll("video");
 const canvases = document.querySelectorAll("canvas");
 const contexts = []
@@ -41,7 +41,9 @@ const imageProperties = [
 ]
 
 let model;
+let isClearing;
 let connectionCounter = 0;
+let drawCount = 0;
 
 const NUM_KEYPOINTS = 468;
 const NUM_IRIS_KEYPOINTS = 5;
@@ -81,6 +83,12 @@ function drawPath(ctx, points, closePath) {
 
 const detectFaces = (video, counter) => {
     return async function () {
+        if(drawCount > connectionCounter) {
+            finalContext.clearRect(0, 0, 600, 400);
+            console.log('clearing canvas ' + drawCount + ' ' + connectionCounter);
+            drawCount = 0;
+        }
+        drawCount ++;
         let desiredCenterX = imageProperties[counter - 1].xPosition;
         let desiredCenterY = imageProperties[counter - 1].yPosition;
         let desiredHeight = imageProperties[counter - 1].faceHeight;
@@ -125,61 +133,69 @@ const detectFaces = (video, counter) => {
 videos.forEach((video) => {
     video.addEventListener("loadeddata", async () => {
         await tf.ready();
-        if(!model) {
+        if (!model) {
             model = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
         }
         const videoInstance = connectionCounter;
         setInterval(detectFaces(video, videoInstance), 40);
-        setInterval(finalContext.clearRect(0, 0, 600, 400), 40);
     })
 })
 
-socket.on("offer", (id, description) => {
-    console.log('got offer');
-    let peerConnection = new RTCPeerConnection(config);
-    peerConnection
-        .setRemoteDescription(description)
-        .then(() => peerConnection.createAnswer())
-        .then(sdp => peerConnection.setLocalDescription(sdp))
-        .then(() => {
-            console.log('emitting answer');
-            socket.emit("answer", id, peerConnection.localDescription);
-        });
-    peerConnection.ontrack = event => {
-        videos[connectionCounter - 1].srcObject = event.streams[0];
+
+const handleJoinRoom = () => {
+    const socket = io.connect(window.location.origin);
+    const roomName = document.getElementById("roomInput").value
+    socket.on("offer", (id, description) => {
+        console.log('got offer');
+        let peerConnection = new RTCPeerConnection(config);
+        peerConnection
+            .setRemoteDescription(description)
+            .then(() => peerConnection.createAnswer())
+            .then(sdp => peerConnection.setLocalDescription(sdp))
+            .then(() => {
+                console.log('emitting answer');
+                socket.emit("answer", id, peerConnection.localDescription);
+            });
+        peerConnection.ontrack = event => {
+            videos[connectionCounter - 1].srcObject = event.streams[0];
 
 
-        console.log('got connection');
+            console.log('got connection');
+        };
+        peerConnection.onicecandidate = event => {
+            if (event.candidate) {
+                socket.emit("candidate", id, event.candidate);
+            }
+        };
+        peerConnections[connectionCounter] = peerConnection;
+        connectionCounter++;
+        console.log('got new connection ' + connectionCounter)
+    });
+
+    socket.on("candidate", (id, candidate) => {
+        console.log('got candidate');
+        peerConnections[connectionCounter - 1]
+            .addIceCandidate(new RTCIceCandidate(candidate))
+            .catch(e => console.error(e));
+    });
+
+    socket.on("connect", () => {
+        console.log('connection');
+        console.log('connection to ' + roomName)
+        socket.emit("watcher", roomName);
+    });
+
+    socket.on("broadcaster", () => {
+        console.log('found broadcaster');
+        socket.emit("watcher", roomName);
+    });
+
+    window.onunload = window.onbeforeunload = () => {
+        socket.close();
+        Object.entries(peerConnections).forEach(([key, peerConnection]) => {
+            peerConnection.close();
+        })
     };
-    peerConnection.onicecandidate = event => {
-        if (event.candidate) {
-            socket.emit("candidate", id, event.candidate);
-        }
-    };
-    peerConnections[connectionCounter] = peerConnection;
-    connectionCounter++;
-});
+}
+document.getElementById("start").addEventListener("click", handleJoinRoom);
 
-socket.on("candidate", (id, candidate) => {
-    console.log('got candidate');
-    peerConnections[connectionCounter - 1]
-        .addIceCandidate(new RTCIceCandidate(candidate))
-        .catch(e => console.error(e));
-});
-
-socket.on("connect", () => {
-    console.log('connection');
-    socket.emit("watcher");
-});
-
-socket.on("broadcaster", () => {
-    console.log('found broadcaster');
-    socket.emit("watcher");
-});
-
-window.onunload = window.onbeforeunload = () => {
-    socket.close();
-    Object.entries(peerConnections).forEach(([key, peerConnection]) => {
-        peerConnection.close();
-    })
-};
