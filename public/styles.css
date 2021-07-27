@@ -33,27 +33,93 @@ html {
     align-items: center;
   }
 
-  img {
+  .body-wrapper{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .example{
     position: absolute;
     top: 0;
     left: 500px;
   }
-  
-  .salvador 
-  img{
-    left:100px;
+
+  .img-wrapper{
+    width:1000px;
+    height:350px;
   }
   
-  .carnival
-  img{
+  .container1{
+    display: flex;
+    flex-direction: row;
+    position:relative;
+  }
+  
+  .layer1{
+    position: absolute;
+    background-color:black;
+    opacity: 80%;
+    width: 300px;
+    height:200px;
+    left:300px;
+    z-index: 10;
+  }
+
+  .salvador{
+    position:absolute;
+    left:300px;
+  }
+
+  .container1:hover .layer1{
+    display: none;
+  }
+  
+  .container2{
+    display: flex;
+    flex-direction: row;
+    position:relative;
+  }
+  .layer2{
+    position: absolute;
+    background-color:black;
+    opacity: 80%;
+    width: 300px;
+    height:200px;
+    left: 550px;
+    z-index: 10;
+  }
+  .carnival{
+    position: absolute;
     left:550px;
   }
-  
-  .spaceship
-  img{
-    left: 1000px;
+  .container2:hover .layer2{
+    display: none;
   }
-   
+  
+  .container3{
+    display: flex;
+    flex-direction: row;
+    position:relative;
+  }
+  .layer3{
+    position: absolute;
+    background-color:black;
+    opacity: 80%;
+    width: 300px;
+    height:200px;
+    left: 100px;
+    z-index: 10;
+  }
+  .spaceship{
+    position: absolute;
+    left: 100px;
+  }
+  .container3:hover .layer3{
+    display: none;
+  } 
+
   #canvas3 {
     left: 832px;
     top: 130px;
@@ -148,6 +214,16 @@ html {
     border: 1px black solid;
     padding: 15px 20px;
   }
+
+  .dropdown
+  select {
+    width: 100%;
+    padding: 15px 20px;
+    border: black 2px solid;
+    border-radius: 8px;
+    background-color:white;
+  }
+
   
  
   
