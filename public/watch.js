@@ -8,7 +8,9 @@ const config = {
 };
 
 
+let canvasCleared = false;
 const videos = document.querySelectorAll("video");
+videosByConnection = {};
 const canvases = document.querySelectorAll("canvas");
 const contexts = []
 canvases.forEach((canvas, index) => {
@@ -17,33 +19,59 @@ canvases.forEach((canvas, index) => {
 const finalCanvas = document.getElementById("finalCanvas");
 const finalContext = finalCanvas.getContext("2d");
 
-const imageProperties = [
-    {
-        faceHeight: 100,
-        xPosition: 100,
-        yPosition: 130
-    },
-    {
-        faceHeight: 50,
-        xPosition: 200,
-        yPosition: 50
-    },
-    {
-        faceHeight: 25,
-        xPosition: 100,
-        yPosition: 50
-    },
-    {
-        faceHeight: 100,
-        xPosition: 300,
-        yPosition: 130
-    },
-]
+const imageProperties = {
+    spaceship: [
+        {
+            faceHeight: 100,
+            xPosition: 100,
+            yPosition: 130
+        },
+        {
+            faceHeight: 50,
+            xPosition: 200,
+            yPosition: 50
+        },
+        {
+            faceHeight: 25,
+            xPosition: 100,
+            yPosition: 50
+        },
+        {
+            faceHeight: 100,
+            xPosition: 300,
+            yPosition: 130
+        },
+    ],
+    circus: [
+        
+        {
+            faceHeight: 50,
+            xPosition: 200,
+            yPosition: 50
+        },
+        {
+            faceHeight: 25,
+            xPosition: 100,
+            yPosition: 50
+        },
+        {
+            faceHeight: 100,
+            xPosition: 300,
+            yPosition: 130
+        },
+        {
+            faceHeight: 100,
+            xPosition: 100,
+            yPosition: 130
+        },
+    ]
+}
 
 let model;
 let isClearing;
 let connectionCounter = 0;
 let drawCount = 0;
+let currentImage = "circus"
 
 const NUM_KEYPOINTS = 468;
 const NUM_IRIS_KEYPOINTS = 5;
@@ -83,21 +111,15 @@ function drawPath(ctx, points, closePath) {
 
 const detectFaces = (video, counter) => {
     return async function () {
-        if(drawCount > connectionCounter) {
-            finalContext.clearRect(0, 0, 600, 400);
-            console.log('clearing canvas ' + drawCount + ' ' + connectionCounter);
-            drawCount = 0;
-        }
-        drawCount ++;
-        let desiredCenterX = imageProperties[counter - 1].xPosition;
-        let desiredCenterY = imageProperties[counter - 1].yPosition;
-        let desiredHeight = imageProperties[counter - 1].faceHeight;
-        videos[counter - 1].style.display = "none"
+        let desiredCenterX = imageProperties[currentImage][counter].xPosition;
+        let desiredCenterY = imageProperties[currentImage][counter].yPosition;
+        let desiredHeight = imageProperties[currentImage][counter].faceHeight;
+        videos[counter].style.display = "none"
         const prediction = await model.estimateFaces({ input: video });
-        let ctx = contexts[counter - 1];
-        let cw = canvases[counter - 1].width;
-        let ch = canvases[counter - 1].height;
-        canvases[counter - 1].style.display = "none";
+        let ctx = contexts[counter];
+        let cw = canvases[counter].width;
+        let ch = canvases[counter].height;
+        canvases[counter].style.display = "none";
         let region = new Path2D();
         ctx.clearRect(0, 0, cw, ch)
         prediction.forEach((prediction) => {
@@ -125,11 +147,25 @@ const detectFaces = (video, counter) => {
             ctx.globalCompositeOperation = 'destination-in';
             ctx.fill(region);
             ctx.globalCompositeOperation = 'source-over';
-            finalContext.drawImage(canvases[counter - 1], prediction.boundingBox.topLeft[0] + xOffset, (prediction.boundingBox.topLeft[1]) - 30 + yOffset, predictedWidth, predictedHeight, desiredCenterX, desiredCenterY, desiredWidth, desiredHeight)
+            finalContext.drawImage(canvases[counter], prediction.boundingBox.topLeft[0] + xOffset, (prediction.boundingBox.topLeft[1]) - 30 + yOffset, predictedWidth, predictedHeight, desiredCenterX, desiredCenterY, desiredWidth, desiredHeight)
+            drawCount++;
+            if (drawCount > Object.keys(videosByConnection).length) {
+                canvasCleared = false;
+            }
         });
+        requestAnimationFrame(() => {
+            if (!canvasCleared) {
+                finalContext.clearRect(0, 0, 600, 400);
+                console.log("clearing " + drawCount + " " + Object.keys(videosByConnection).length);
+                canvasCleared = true;
+                drawCount = 0;
+            }
+            detectFaces(video, counter)()
+        }
+        );
     }
 }
-
+/*
 videos.forEach((video) => {
     video.addEventListener("loadeddata", async () => {
         await tf.ready();
@@ -139,7 +175,7 @@ videos.forEach((video) => {
         const videoInstance = connectionCounter;
         setInterval(detectFaces(video, videoInstance), 40);
     })
-})
+})*/
 
 
 const handleJoinRoom = () => {
@@ -157,8 +193,15 @@ const handleJoinRoom = () => {
                 socket.emit("answer", id, peerConnection.localDescription);
             });
         peerConnection.ontrack = event => {
-            videos[connectionCounter - 1].srcObject = event.streams[0];
-
+            videosByConnection[id] = videos[Object.keys(videosByConnection).length]
+            videosByConnection[id].addEventListener("loadeddata", async () => {
+                await tf.ready();
+                if (!model) {
+                    model = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
+                }
+                requestAnimationFrame(detectFaces(videos[Object.keys(videosByConnection).length - 1], Object.keys(videosByConnection).length - 1)); // have to subtract one to keep counter correct after adding to videosByConnection
+            })
+            videosByConnection[id].srcObject = event.streams[0];
 
             console.log('got connection');
         };
@@ -167,14 +210,14 @@ const handleJoinRoom = () => {
                 socket.emit("candidate", id, event.candidate);
             }
         };
-        peerConnections[connectionCounter] = peerConnection;
-        connectionCounter++;
-        console.log('got new connection ' + connectionCounter)
+        peerConnections[id] = peerConnection;
+
+        console.log('got new connection ' + JSON.stringify(peerConnections[id]))
     });
 
     socket.on("candidate", (id, candidate) => {
         console.log('got candidate');
-        peerConnections[connectionCounter - 1]
+        peerConnections[id]
             .addIceCandidate(new RTCIceCandidate(candidate))
             .catch(e => console.error(e));
     });
