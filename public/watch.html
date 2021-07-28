@@ -6,7 +6,7 @@
 	<link href="/styles.css" rel="stylesheet">
 </head>
 <body>
-	<div class= "body-wrapper">    
+	<div class= "body-wrapper horizontal">    
 		<div class= "input-wrapper">   
 			<input type="text" placeholder="input room name here" id="roomInput"/>
 			<button type="button" id="start" class="button button1" >Connect to Meeting</button>
@@ -20,19 +20,20 @@
 			<video id="video6" playsinline autoplay></video>
 		</div>
 		<div class= "canvas-wrapper">
-			<canvas id="canvas1" width="600px" height="400px"></canvas>
-			<canvas id="canvas2" width="600px" height="400px"></canvas>
-			<canvas id="canvas3" width="600px" height="400px"></canvas>
-			<canvas id="canvas4" width="600px" height="400px"></canvas>
-			<canvas id="canvas5" width="600px" height="400px"></canvas>
-			<canvas id="canvas6" width="600px" height="400px"></canvas>
+			<canvas class= "temporary-canvas" id="canvas1" width="600px" height="400px"></canvas>
+			<canvas class= "temporary-canvas" id="canvas2" width="600px" height="400px"></canvas>
+			<canvas class= "temporary-canvas" id="canvas3" width="600px" height="400px"></canvas>
+			<canvas class= "temporary-canvas" id="canvas4" width="600px" height="400px"></canvas>
+			<canvas class= "temporary-canvas" id="canvas5" width="600px" height="400px"></canvas>
+			<canvas class= "temporary-canvas" id="canvas6" width="600px" height="400px"></canvas>
 			<canvas id="finalCanvas" width="600px" height="400px"></canvas>
+			<div class="backdrop">
+				<img src="/head_in_the_hole.jpg" alt="">
+			</div>
 		</div>
 	
 		<script src="/watch.js"></script>
-		<div class="example">
-			<img src="/head_in_the_hole.jpg" alt="">
-		</div>
+		
 
 		<script src="https://unpkg.com/@tensorflow/tfjs-core@2.4.0/dist/tf-core.js"></script>
 		<script src="https://unpkg.com/@tensorflow/tfjs-converter@2.4.0/dist/tf-converter.js"></script>

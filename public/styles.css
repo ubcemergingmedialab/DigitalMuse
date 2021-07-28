@@ -12,7 +12,7 @@ html {
     z-index: 100;
   }
   
-  canvas {
+  .temporary-canvas {
       width: 25%;
       height: 25%;
       position: absolute;
@@ -23,7 +23,7 @@ html {
   }
   
   body {
-    background-color: whitesmoke;
+    background:whitesmoke;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     margin: 0;
     height: 100%;
@@ -31,6 +31,8 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
+    /* background:url("Spaceship.jpg");
+    background-size: contain; */
   }
 
   .body-wrapper{
@@ -39,8 +41,12 @@ html {
     align-items: center;
     flex-direction: column;
   }
+  
+  .body-wrapper.horizontal{
+    flex-direction: row;
+  }
 
-  .example{
+  .backdrop{
     position: absolute;
     top: 0;
     left: 500px;
@@ -55,6 +61,7 @@ html {
     display: flex;
     flex-direction: row;
     position:relative;
+    left: 50px;
   }
   
   .layer1{
@@ -80,6 +87,7 @@ html {
     display: flex;
     flex-direction: row;
     position:relative;
+    left:250px;
   }
   .layer2{
     position: absolute;
@@ -102,6 +110,7 @@ html {
     display: flex;
     flex-direction: row;
     position:relative;
+    right: 200px;
   }
   .layer3{
     position: absolute;
@@ -156,6 +165,19 @@ html {
     color: black;
     font-size: 2em;
   }
+
+  h4{
+    text-align: center;
+    text-transform: uppercase;
+    color: white; 
+    z-index: 20;
+    margin-top: 90px;
+  }
+
+  .header-bottom-margin{
+    margin-bottom: 5em;
+  }
+  
   p {
     text-align:center;
     text-transform: initial;
@@ -168,6 +190,7 @@ html {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    margin-bottom: 5em;
   }
   .button {
     background-color: rgb(131, 125, 123);
@@ -180,15 +203,18 @@ html {
     font-size: 14px;
     font-weight: bold;
     margin: 8px 8px;
+    box-shadow: 4px 5px 5px rgba(0,0,0,0.62);
   }	 
   /* Host button */
   .button1 {
-    background-color: lightsalmon;
+    background: rgb(244,218,162);
+    background: linear-gradient(10deg, rgba(244,218,162,1) 20%, rgba(255,182,71,1) 67%)
   }	 
 
   /* Participant button */
   .button2 {
-    background-color:cornflowerblue;
+    background: rgb(255,142,121);
+    background: linear-gradient(10deg, rgba(255,142,121,1) 41%, rgba(251,190,160,1) 91%);
   }
   /* No underline link button */
   a:link {
@@ -202,12 +228,12 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
-    position:absolute;
-    left:30px;
+    /* position:absolute;
+    left:30px; */
   }
   .input-wrapper, .button{
     border: none;
-    padding: 15px 20px;
+    padding: 10px 20px;
   }
   
   input {
