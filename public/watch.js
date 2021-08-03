@@ -43,7 +43,7 @@ const imageProperties = {
         },
     ],
     circus: [
-        
+
         {
             faceHeight: 50,
             xPosition: 200,
@@ -71,7 +71,7 @@ let model;
 let isClearing;
 let connectionCounter = 0;
 let drawCount = 0;
-let currentImage = "circus"
+let currentImage = "spaceship"
 
 const NUM_KEYPOINTS = 468;
 const NUM_IRIS_KEYPOINTS = 5;
@@ -149,18 +149,19 @@ const detectFaces = (video, counter) => {
             ctx.globalCompositeOperation = 'source-over';
             finalContext.drawImage(canvases[counter], prediction.boundingBox.topLeft[0] + xOffset, (prediction.boundingBox.topLeft[1]) - 30 + yOffset, predictedWidth, predictedHeight, desiredCenterX, desiredCenterY, desiredWidth, desiredHeight)
             drawCount++;
-            if (drawCount > Object.keys(videosByConnection).length) {
+            if (drawCount > Object.keys(videosByConnection).length + 1) {
                 canvasCleared = false;
             }
         });
         requestAnimationFrame(() => {
-            if (!canvasCleared) {
-                finalContext.clearRect(0, 0, 600, 400);
-                console.log("clearing " + drawCount + " " + Object.keys(videosByConnection).length);
-                canvasCleared = true;
-                drawCount = 0;
-            }
-            detectFaces(video, counter)()
+            setTimeout(() => {
+                if (!canvasCleared) {
+                    finalContext.clearRect(0, 0, 600, 400);
+                    canvasCleared = true;
+                    drawCount = 0;
+                }
+                detectFaces(video, counter, model)()
+            }, 60)
         }
         );
     }
