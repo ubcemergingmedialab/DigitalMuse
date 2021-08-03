@@ -241,6 +241,13 @@ html {
     padding: 15px 20px;
   }
 
+  .input-wrapper-left-column{
+    display:flex;
+    flex-direction: column;
+    margin-right: 15em;
+    margin-top: 30em;
+  }
+  
   .dropdown
   select {
     width: 100%;
