@@ -14,8 +14,8 @@
             <button type="button" class="button button2">Copy</button>
         </div>	
         <div class="input-wrapper">
-            <input type="text" placeholder="ID 2"/> 
-            <button type="button" class="button button2">Copy</button>
+            <input id= "myInput2" value= "ok" type="text" placeholder="ID 2"/> 
+            <button type="button" class="button button2" onclick="myFunction()">Copy</button>
         </div>	
         <div class="input-wrapper">
             <input type="text" placeholder="ID 3"/> 
@@ -33,4 +33,14 @@
         
 	</div>
 </body>
+<script>
+    function myFunction() {
+        var copy = document.getElementById("myInput2");
+        copy.select();
+        copy.setSelectionRange(0,99999);
+        document.execCommand('copy');
+        alert('Copied to Clipboard:'+ copy.value);
+    }
+    
+</script>
 </html>
