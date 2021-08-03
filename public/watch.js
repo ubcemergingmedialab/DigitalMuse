@@ -21,51 +21,97 @@ const finalContext = finalCanvas.getContext("2d");
 
 const imageProperties = {
     spaceship: [
-        {
-            faceHeight: 100,
-            xPosition: 100,
-            yPosition: 130
+        {//board person
+            faceHeight: 125,
+            xPosition: 1130,
+            yPosition: 440
         },
-        {
-            faceHeight: 50,
-            xPosition: 200,
-            yPosition: 50
+        {//bottom left chair person
+            faceHeight: 125,
+            xPosition: 670,
+            yPosition: 500
         },
-        {
-            faceHeight: 25,
-            xPosition: 100,
-            yPosition: 50
+        {// chair person
+            faceHeight: 125,
+            xPosition: 340,
+            yPosition: 190
         },
-        {
-            faceHeight: 100,
-            xPosition: 300,
-            yPosition: 130
+        {// clipboard person
+            faceHeight: 125,
+            xPosition: 190,
+            yPosition: 510
+        },
+        {//hand up person
+            faceHeight: 125,
+            xPosition: 135,
+            yPosition: 160
         },
     ],
-    circus: [
-
-        {
-            faceHeight: 50,
-            xPosition: 200,
-            yPosition: 50
+    salvador: [
+        {//board person
+            faceHeight: 125,
+            xPosition: 1140,
+            yPosition: 440
         },
-        {
-            faceHeight: 25,
-            xPosition: 100,
-            yPosition: 50
+        {//bottom left chair person
+            faceHeight: 125,
+            xPosition: 670,
+            yPosition: 500
         },
-        {
-            faceHeight: 100,
-            xPosition: 300,
-            yPosition: 130
+        {// chair person
+            faceHeight: 125,
+            xPosition: 340,
+            yPosition: 190
         },
-        {
-            faceHeight: 100,
-            xPosition: 100,
-            yPosition: 130
+        {// clipboard person
+            faceHeight: 125,
+            xPosition: 190,
+            yPosition: 510
         },
+        {//hand up person
+            faceHeight: 125,
+            xPosition: 135,
+            yPosition: 160
+        },
+    ],
+    carnival: [
+        [
+            {//board person
+                faceHeight: 125,
+                xPosition: 1140,
+                yPosition: 440
+            },
+            {//bottom left chair person
+                faceHeight: 125,
+                xPosition: 670,
+                yPosition: 500
+            },
+            {// chair person
+                faceHeight: 125,
+                xPosition: 340,
+                yPosition: 190
+            },
+            {// clipboard person
+                faceHeight: 125,
+                xPosition: 190,
+                yPosition: 510
+            },
+            {//hand up person
+                faceHeight: 125,
+                xPosition: 135,
+                yPosition: 160
+            },
+        ],
     ]
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+    let url_string = window.location.href
+    let url = new URL(url_string);
+    let theme = url.searchParams.get("theme");
+    document.getElementById("backdrop").src = theme + ".jpg";
+    console.log(document.getElementById("backdrop").naturalWidth + " " + document.getElementById("backdrop").naturalHeight)
+});
 
 let model;
 let isClearing;
@@ -149,19 +195,19 @@ const detectFaces = (video, counter) => {
             ctx.globalCompositeOperation = 'source-over';
             finalContext.drawImage(canvases[counter], prediction.boundingBox.topLeft[0] + xOffset, (prediction.boundingBox.topLeft[1]) - 30 + yOffset, predictedWidth, predictedHeight, desiredCenterX, desiredCenterY, desiredWidth, desiredHeight)
             drawCount++;
-            if (drawCount > Object.keys(videosByConnection).length + 1) {
+            if (drawCount > Object.keys(videosByConnection).length * 10) {
                 canvasCleared = false;
             }
         });
         requestAnimationFrame(() => {
             setTimeout(() => {
                 if (!canvasCleared) {
-                    finalContext.clearRect(0, 0, 600, 400);
+                    finalContext.clearRect(0, 0, 1920, 1300);
                     canvasCleared = true;
                     drawCount = 0;
                 }
                 detectFaces(video, counter, model)()
-            }, 60)
+            }, 200)
         }
         );
     }

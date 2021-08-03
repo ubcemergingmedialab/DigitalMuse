@@ -12,7 +12,7 @@ const video = document.querySelector("video");
 
 // Media contrains
 const constraints = {
-    video: { facingMode: "user", width: 600, height: 400 }
+    video: { facingMode: "user", width: 1325, height: 937 }
     // Uncomment to enable audio
     // audio: true,
 };
