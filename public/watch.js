@@ -22,27 +22,27 @@ const finalContext = finalCanvas.getContext("2d");
 const imageProperties = {
     spaceship: [
         {//board person
-            faceHeight: 125,
+            faceHeight: 150,
             xPosition: 1130,
             yPosition: 440
         },
         {//bottom left chair person
-            faceHeight: 125,
+            faceHeight: 150,
             xPosition: 670,
             yPosition: 500
         },
         {// chair person
-            faceHeight: 125,
+            faceHeight: 150,
             xPosition: 340,
             yPosition: 190
         },
         {// clipboard person
-            faceHeight: 125,
+            faceHeight: 150,
             xPosition: 190,
             yPosition: 510
         },
         {//hand up person
-            faceHeight: 125,
+            faceHeight: 150,
             xPosition: 135,
             yPosition: 160
         },
