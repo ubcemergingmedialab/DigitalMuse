@@ -142,6 +142,61 @@ html {
     display: none;
   } 
 
+  .salvador{
+    position:absolute;
+    left:300px;
+  }
+
+  .container1:hover .layer1{
+    display: none;
+  }
+  
+  .container2{
+    display: flex;
+    flex-direction: row;
+    position:relative;
+    left:250px;
+  }
+  .layer2{
+    position: absolute;
+    background-color:black;
+    opacity: 80%;
+    width: 300px;
+    height:200px;
+    left: 550px;
+    z-index: 10;
+  }
+  .carnival{
+    position: absolute;
+    left:550px;
+  }
+  .container2:hover .layer2{
+    display: none;
+  }
+  
+  .container3{
+    display: flex;
+    flex-direction: row;
+    position:relative;
+    right: 200px;
+  }
+  .layer3{
+    position: absolute;
+    background-color:black;
+    opacity: 80%;
+    width: 300px;
+    height:200px;
+    left: 100px;
+    z-index: 10;
+  }
+  .spaceship{
+    position: absolute;
+    left: 100px;
+  }
+  .container3:hover .layer3{
+    display: none;
+  } 
+
   #canvas3 {
     left: 832px;
     top: 130px;

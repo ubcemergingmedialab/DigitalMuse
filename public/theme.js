@@ -1,3 +1,3 @@
 ThemeHandler = function (name) {
-    document.getElementById("link").setAttribute("href", "enter_participant.html?theme=" + name)
+    document.getElementById("link").setAttribute("href", "watch.html?theme=" + name)
 }
