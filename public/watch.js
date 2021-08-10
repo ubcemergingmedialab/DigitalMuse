@@ -19,6 +19,10 @@ canvases.forEach((canvas, index) => {
 const finalCanvas = document.getElementById("finalCanvas");
 const finalContext = finalCanvas.getContext("2d");
 
+propertyAssignments = {
+    //peer connection id -> image property
+}
+
 const imageProperties = {
     spaceship: [
         {//board person
@@ -155,11 +159,16 @@ function drawPath(ctx, points, closePath) {
     ctx.stroke(region);
 }
 
-const detectFaces = (video, counter) => {
+const detectFaces = (video, counter, id) => {
     return async function () {
-        let desiredCenterX = imageProperties[currentImage][counter].xPosition;
-        let desiredCenterY = imageProperties[currentImage][counter].yPosition;
-        let desiredHeight = imageProperties[currentImage][counter].faceHeight;
+        // if property assignments hasnt assigned current id, add current id property assignment from imageProperties[currentImage][counter]
+        if(!propertyAssignments[id]) {
+            propertyAssignments[id] = imageProperties[currentImage][counter]
+            console.log('assigning properties '+ id);
+        }
+        let desiredCenterX = propertyAssignments[id].xPosition;
+        let desiredCenterY = propertyAssignments[id].yPosition;
+        let desiredHeight = propertyAssignments[id].faceHeight;
         videos[counter].style.display = "none"
         const prediction = await model.estimateFaces({ input: video });
         let ctx = contexts[counter];
@@ -212,6 +221,14 @@ const detectFaces = (video, counter) => {
         );
     }
 }
+
+const handleSwapVideos = (id1, id2) => {
+    if(propertyAssignments[id1] && propertyAssignments[id2]) {  
+        let tempProperties = propertyAssignments[id1];
+        propertyAssignmnets[id1] = propertyAssignmnets[id2];
+        propertyAssignmnets[id2] = tempProperties;
+    }
+}
 /*
 videos.forEach((video) => {
     video.addEventListener("loadeddata", async () => {
@@ -246,7 +263,7 @@ const handleJoinRoom = () => {
                 if (!model) {
                     model = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
                 }
-                requestAnimationFrame(detectFaces(videos[Object.keys(videosByConnection).length - 1], Object.keys(videosByConnection).length - 1)); // have to subtract one to keep counter correct after adding to videosByConnection
+                requestAnimationFrame(detectFaces(videos[Object.keys(videosByConnection).length - 1], Object.keys(videosByConnection).length - 1), id); // have to subtract one to keep counter correct after adding to videosByConnection // pass in id
             })
             videosByConnection[id].srcObject = event.streams[0];
 
