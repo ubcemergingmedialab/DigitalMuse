@@ -198,7 +198,12 @@ html {
   }
   .container3:hover .layer3{
     display: none;
-  } 
+  }
+
+  #finalCanvas{
+    position:absolute;
+    z-index: 100;
+  }
 
   #canvas3 {
     left: 832px;
@@ -209,11 +214,6 @@ html {
     left: 950px;
     top: 155px;
   }
-  #finalCanvas {
-    left: 1050px;
-    top: 400px;
-  }
-  
   .header-wrapper {
     top: 500px;
   }

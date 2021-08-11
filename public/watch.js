@@ -52,30 +52,35 @@ const imageProperties = {
         },
     ],
     salvador: [
-        {//board person
+        {// cup person
             faceHeight: 125,
-            xPosition: 1140,
-            yPosition: 440
+            xPosition: 180,
+            yPosition: 470
         },
-        {//bottom left chair person
+        {// elephant 1
             faceHeight: 125,
-            xPosition: 670,
-            yPosition: 500
+            xPosition: 385,
+            yPosition: 10
         },
-        {// chair person
+        {// elephant 2
             faceHeight: 125,
-            xPosition: 340,
-            yPosition: 190
+            xPosition: 675,
+            yPosition: 80
         },
-        {// clipboard person
+        {// elephant 3
             faceHeight: 125,
-            xPosition: 190,
-            yPosition: 510
+            xPosition: 920,
+            yPosition: 170
         },
-        {//hand up person
+        {//wall person
             faceHeight: 125,
-            xPosition: 135,
-            yPosition: 160
+            xPosition: 1153,
+            yPosition: 630
+        },
+        {//cloud person
+            faceHeight: 125,
+            xPosition: 1150,
+            yPosition: 65
         },
     ],
     carnival: [
@@ -118,10 +123,12 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 let model;
+let models = {};
 let isClearing;
 let connectionCounter = 0;
 let drawCount = 0;
-let currentImage = "spaceship"
+const urlParams = new URLSearchParams(window.location.search);
+const currentImage = urlParams.get('theme');
 
 const NUM_KEYPOINTS = 468;
 const NUM_IRIS_KEYPOINTS = 5;
@@ -164,13 +171,13 @@ const detectFaces = (video, counter, id) => {
         // if property assignments hasnt assigned current id, add current id property assignment from imageProperties[currentImage][counter]
         if(!propertyAssignments[id]) {
             propertyAssignments[id] = imageProperties[currentImage][counter]
-            console.log('assigning properties '+ id);
+            console.log('assigning properties '+ JSON.stringify(propertyAssignments));
         }
         let desiredCenterX = propertyAssignments[id].xPosition;
         let desiredCenterY = propertyAssignments[id].yPosition;
         let desiredHeight = propertyAssignments[id].faceHeight;
         videos[counter].style.display = "none"
-        const prediction = await model.estimateFaces({ input: video });
+        const prediction = await models[id].estimateFaces({ input: video });
         let ctx = contexts[counter];
         let cw = canvases[counter].width;
         let ch = canvases[counter].height;
@@ -180,21 +187,19 @@ const detectFaces = (video, counter, id) => {
         prediction.forEach((prediction) => {
             let predictedCenterX = (prediction.boundingBox.bottomRight[0] + prediction.boundingBox.topLeft[0]) / 2;
             let predictedCenterY = (prediction.boundingBox.bottomRight[1] + prediction.boundingBox.topLeft[1]) / 2;
-            let xOffset = desiredCenterX - predictedCenterX;
-            let yOffset = desiredCenterY - predictedCenterY;
             let predictedHeight = prediction.boundingBox.bottomRight[1] - prediction.boundingBox.topLeft[1];
             let predictedWidth = prediction.boundingBox.bottomRight[0] - prediction.boundingBox.topLeft[0];
             let predictionRatio = predictedHeight / predictedWidth;
             let desiredWidth = desiredHeight / predictionRatio;
-            ctx.drawImage(video, xOffset, yOffset, cw, ch);
+            ctx.drawImage(video, 0, 0, cw, ch);
             const keypoints = prediction.annotations.silhouette;
             ctx.fillStyle = GREEN;
             for (let i = 0; i < keypoints.length; i++) {
                 if (i == 0) {
-                    region.moveTo((keypoints[i][0]) + xOffset, (keypoints[i][1]) + yOffset);
+                    region.moveTo((keypoints[i][0]), (keypoints[i][1]));
                     //ctx.stroke();
                 } else {
-                    region.lineTo((keypoints[i][0]) + xOffset, (keypoints[i][1]) + yOffset)
+                    region.lineTo((keypoints[i][0]), (keypoints[i][1]))
                     //ctx.stroke();
                 }
             }
@@ -202,7 +207,7 @@ const detectFaces = (video, counter, id) => {
             ctx.globalCompositeOperation = 'destination-in';
             ctx.fill(region);
             ctx.globalCompositeOperation = 'source-over';
-            finalContext.drawImage(canvases[counter], prediction.boundingBox.topLeft[0] + xOffset, (prediction.boundingBox.topLeft[1]) - 30 + yOffset, predictedWidth, predictedHeight, desiredCenterX, desiredCenterY, desiredWidth, desiredHeight)
+            finalContext.drawImage(canvases[counter], prediction.boundingBox.topLeft[0], (prediction.boundingBox.topLeft[1]) - 30, predictedWidth, predictedHeight, desiredCenterX, desiredCenterY, desiredWidth, desiredHeight)
             drawCount++;
             if (drawCount > Object.keys(videosByConnection).length * 10) {
                 canvasCleared = false;
@@ -215,19 +220,23 @@ const detectFaces = (video, counter, id) => {
                     canvasCleared = true;
                     drawCount = 0;
                 }
-                detectFaces(video, counter, model)()
+                detectFaces(video, counter, id)()
             }, 200)
         }
         );
     }
 }
 
-const handleSwapVideos = (id1, id2) => {
+handleSwapVideos = function() {
+    let id1 = Object.keys(propertyAssignments)[0]
+    let id2 = Object.keys(propertyAssignments)[1]
     if(propertyAssignments[id1] && propertyAssignments[id2]) {  
         let tempProperties = propertyAssignments[id1];
-        propertyAssignmnets[id1] = propertyAssignmnets[id2];
-        propertyAssignmnets[id2] = tempProperties;
+        propertyAssignments[id1] = propertyAssignments[id2];
+        propertyAssignments[id2] = tempProperties;
+        console.log('swapped properties');
     }
+    console.log(propertyAssignments);
 }
 /*
 videos.forEach((video) => {
@@ -260,10 +269,11 @@ const handleJoinRoom = () => {
             videosByConnection[id] = videos[Object.keys(videosByConnection).length]
             videosByConnection[id].addEventListener("loadeddata", async () => {
                 await tf.ready();
-                if (!model) {
-                    model = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
+                if (!models[id]) {
+                    models[id] = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
                 }
-                requestAnimationFrame(detectFaces(videos[Object.keys(videosByConnection).length - 1], Object.keys(videosByConnection).length - 1), id); // have to subtract one to keep counter correct after adding to videosByConnection // pass in id
+                console.log('calling detect faces ' + id);
+                requestAnimationFrame(detectFaces(videos[Object.keys(videosByConnection).length - 1], Object.keys(videosByConnection).length - 1, id)); // have to subtract one to keep counter correct after adding to videosByConnection // pass in id
             })
             videosByConnection[id].srcObject = event.streams[0];
 
