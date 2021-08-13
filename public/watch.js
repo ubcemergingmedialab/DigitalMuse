@@ -157,6 +157,12 @@ function drawPath(ctx, points, closePath) {
 
 const detectFaces = (video, counter) => {
     return async function () {
+        // Catherine says:
+        // The following 3 lines need to be changed to calculate xPosition, yPosition, and faceHeight
+        // based on the height and width of #backdrop. We can take the pixel values supplied
+        // for xPosition, etc., and then divide by height/width to get the new values.
+        // A nice-to-have would recalculuate these positions and faceHeight when the window
+        // resize event is triggered.
         let desiredCenterX = imageProperties[currentImage][counter].xPosition;
         let desiredCenterY = imageProperties[currentImage][counter].yPosition;
         let desiredHeight = imageProperties[currentImage][counter].faceHeight;
