@@ -21,8 +21,6 @@ const finalContext = finalCanvas.getContext("2d");
 const backdrop = document.getElementById("backdrop");
 const heightRatio = backdrop.height / finalCanvas.height;
 const widthRatio = backdrop.width / finalCanvas.width;
-finalCanvas.width = backdrop.width;
-finalCanvas.height = backdrop.height;
 //finalCanvas.left = backdrop.marginLeft;
 
 propertyAssignments = {
