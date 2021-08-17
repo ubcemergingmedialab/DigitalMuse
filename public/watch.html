@@ -5,13 +5,20 @@
 	<meta charset="UTF-8" />
 	<link href="/styles.css" rel="stylesheet">
 </head>
-<body>
+<body class="watch">
 	<div class= "body-wrapper horizontal">    
+		
 		<div class= "input-wrapper-left-column">   
 			<input type="text" placeholder="input room name here" id="roomInput"/>
 			<button type="button" id="start" class="button button1" >Connect to Meeting</button>
 			<button type="button" onclick="handleSwapVideos()"></button>
 		</div>
+	
+		<div class="image-selected">
+			<img id="backdrop" src="/carnival.jpg" alt="">
+			<canvas id="finalCanvas"></canvas>
+		</div>
+		
 		<div class="video-wrapper">
 			<video id="video1" playsinline autoplay></video>
 			<video id="video2" playsinline autoplay></video>
@@ -27,12 +34,7 @@
 			<canvas class= "temporary-canvas" id="canvas4" width="1325px" height="937px"></canvas>
 			<canvas class= "temporary-canvas" id="canvas5" width="1325px" height="937px"></canvas>
 			<canvas class= "temporary-canvas" id="canvas6" width="1325px" height="937px"></canvas>
-			<canvas id="finalCanvas" width="1325px" height="937px"></canvas>
-			
-		<div class="image-selected">
-			<img id="backdrop" src="/carnival.jpg" width="1325px" height="937px" alt="">
-		</div>
-		</div>
+		</div>	
 	</div>
 		<script src="/watch.js"></script>
 		

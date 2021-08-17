@@ -11,13 +11,19 @@ const config = {
 let canvasCleared = false;
 const videos = document.querySelectorAll("video");
 videosByConnection = {};
-const canvases = document.querySelectorAll("canvas");
+const canvases = document.querySelectorAll(".temporary-canvas");
 const contexts = []
 canvases.forEach((canvas, index) => {
     contexts[index] = canvas.getContext("2d");
 })
 const finalCanvas = document.getElementById("finalCanvas");
 const finalContext = finalCanvas.getContext("2d");
+const backdrop = document.getElementById("backdrop");
+const heightRatio = backdrop.height / finalCanvas.height;
+const widthRatio = backdrop.width / finalCanvas.width;
+finalCanvas.width = backdrop.width;
+finalCanvas.height = backdrop.height;
+//finalCanvas.left = backdrop.marginLeft;
 
 propertyAssignments = {
     //peer connection id -> image property
@@ -177,13 +183,20 @@ function drawPath(ctx, points, closePath) {
 const detectFaces = (video, counter, id) => {
     return async function () {
         // if property assignments hasnt assigned current id, add current id property assignment from imageProperties[currentImage][counter]
+        
+        // Catherine says:
+        // The following 3 lines need to be changed to calculate xPosition, yPosition, and faceHeight
+        // based on the height and width of #backdrop. We can take the pixel values supplied
+        // for xPosition, etc., and then divide by height/width to get the new values.
+        // A nice-to-have would recalculuate these positions and faceHeight when the window
+        // resize event is triggered.
         if (!propertyAssignments[id]) {
             propertyAssignments[id] = imageProperties[currentImage][counter]
             console.log('assigning properties ' + JSON.stringify(propertyAssignments));
         }
-        let desiredCenterX = propertyAssignments[id].xPosition;
-        let desiredCenterY = propertyAssignments[id].yPosition;
-        let desiredHeight = propertyAssignments[id].faceHeight;
+        let desiredCenterX = propertyAssignments[id].xPosition * widthRatio;
+        let desiredCenterY = propertyAssignments[id].yPosition * heightRatio;
+        let desiredHeight = propertyAssignments[id].faceHeight * heightRatio;
         videos[counter].style.display = "none"
         const prediction = await models[id].estimateFaces({ input: video });
         let ctx = contexts[counter];
