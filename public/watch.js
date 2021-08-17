@@ -84,33 +84,41 @@ const imageProperties = {
         },
     ],
     carnival: [
-        [
-            {//board person
-                faceHeight: 125,
-                xPosition: 1140,
-                yPosition: 440
-            },
-            {//bottom left chair person
-                faceHeight: 125,
-                xPosition: 670,
-                yPosition: 500
-            },
-            {// chair person
-                faceHeight: 125,
-                xPosition: 340,
-                yPosition: 190
-            },
-            {// clipboard person
-                faceHeight: 125,
-                xPosition: 190,
-                yPosition: 510
-            },
-            {//hand up person
-                faceHeight: 125,
-                xPosition: 135,
-                yPosition: 160
-            },
-        ],
+        {//gymnast
+            faceHeight: 125,
+            xPosition: 675,
+            yPosition: 50
+        },
+        {//front person
+            faceHeight: 125,
+            xPosition: 780,
+            yPosition: 460
+        },
+        {//sitting tiger
+            faceHeight: 125,
+            xPosition: 570,
+            yPosition: 320
+        },
+        {// juggler
+            faceHeight: 125,
+            xPosition: 280,
+            yPosition: 410
+        },
+        {// dancer
+            faceHeight: 125,
+            xPosition: 340,
+            yPosition: 220
+        },
+        {//tiger
+            faceHeight: 125,
+            xPosition: 920,
+            yPosition: 400
+        },
+        {//whip person
+            faceHeight: 125,
+            xPosition: 1030,
+            yPosition: 270
+        },
     ]
 }
 
@@ -169,9 +177,9 @@ function drawPath(ctx, points, closePath) {
 const detectFaces = (video, counter, id) => {
     return async function () {
         // if property assignments hasnt assigned current id, add current id property assignment from imageProperties[currentImage][counter]
-        if(!propertyAssignments[id]) {
+        if (!propertyAssignments[id]) {
             propertyAssignments[id] = imageProperties[currentImage][counter]
-            console.log('assigning properties '+ JSON.stringify(propertyAssignments));
+            console.log('assigning properties ' + JSON.stringify(propertyAssignments));
         }
         let desiredCenterX = propertyAssignments[id].xPosition;
         let desiredCenterY = propertyAssignments[id].yPosition;
@@ -221,16 +229,16 @@ const detectFaces = (video, counter, id) => {
                     drawCount = 0;
                 }
                 detectFaces(video, counter, id)()
-            }, 200)
+            }, 100)
         }
         );
     }
 }
 
-handleSwapVideos = function() {
+handleSwapVideos = function () {
     let id1 = Object.keys(propertyAssignments)[0]
     let id2 = Object.keys(propertyAssignments)[1]
-    if(propertyAssignments[id1] && propertyAssignments[id2]) {  
+    if (propertyAssignments[id1] && propertyAssignments[id2]) {
         let tempProperties = propertyAssignments[id1];
         propertyAssignments[id1] = propertyAssignments[id2];
         propertyAssignments[id2] = tempProperties;
