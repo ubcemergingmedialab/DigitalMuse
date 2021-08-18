@@ -86,6 +86,7 @@ body.watch .body-wrapper {
 
 #finalCanvas {
   position: absolute;
+  left: 160px;
 }
 
 .img-wrapper {
