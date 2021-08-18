@@ -21,7 +21,6 @@ const finalContext = finalCanvas.getContext("2d");
 const backdrop = document.getElementById("backdrop");
 const heightRatio = backdrop.height / finalCanvas.height;
 const widthRatio = backdrop.width / finalCanvas.width;
-//finalCanvas.left = backdrop.marginLeft;
 
 propertyAssignments = {
     //peer connection id -> image property
@@ -271,6 +270,8 @@ videos.forEach((video) => {
 
 
 const handleJoinRoom = () => {
+    finalCanvas.style.left = backdrop.style.marginLeft;
+
     const socket = io.connect(window.location.origin);
     const roomName = document.getElementById("roomInput").value
     socket.on("offer", (id, description) => {
