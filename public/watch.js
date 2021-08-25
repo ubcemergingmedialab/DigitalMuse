@@ -19,8 +19,8 @@ canvases.forEach((canvas, index) => {
 const finalCanvas = document.getElementById("finalCanvas");
 const finalContext = finalCanvas.getContext("2d");
 const backdrop = document.getElementById("backdrop");
-const heightRatio = backdrop.height / finalCanvas.height;
-const widthRatio = backdrop.width / finalCanvas.width;
+const heightRatio = backdrop.height / finalCanvas.style.height;
+const widthRatio = backdrop.width / finalCanvas.style.width;
 
 propertyAssignments = {
     //peer connection id -> image property
@@ -270,7 +270,11 @@ videos.forEach((video) => {
 
 
 const handleJoinRoom = () => {
-    finalCanvas.style.left = backdrop.style.marginLeft;
+    
+    var rect = document.getElementById("backdrop").getBoundingClientRect();
+    finalCanvas.style.left = rect.left;
+    finalCanvas.style.width = document.getElementById("backdrop").style.width;
+    console.log(rect.top, rect.right, rect.bottom, rect.left);
 
     const socket = io.connect(window.location.origin);
     const roomName = document.getElementById("roomInput").value
