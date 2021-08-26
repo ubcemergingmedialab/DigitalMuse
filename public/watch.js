@@ -196,12 +196,12 @@ const detectFaces = (video, counter, id) => {
         let desiredCenterX = propertyAssignments[id].xPosition * widthRatio;
         let desiredCenterY = propertyAssignments[id].yPosition * heightRatio;
         let desiredHeight = propertyAssignments[id].faceHeight * heightRatio;
-        //videos[counter].style.display = "none"
+        videos[counter].style.display = "none"
         const prediction = await model.estimateFaces({ input: video });
         let ctx = contexts[counter];
         let cw = canvases[counter].width;
         let ch = canvases[counter].height;
-        //canvases[counter].style.display = "none";
+        canvases[counter].style.display = "none";
         let region = new Path2D();
         ctx.clearRect(0, 0, cw, ch)
         prediction.forEach((prediction) => {
@@ -251,7 +251,7 @@ const detectFaces = (video, counter, id) => {
 
 beginDrawingFace = function(canvas, id) {
     drawCount++;
-    if (drawCount > Object.keys(propertyAssignments).length + 1) {
+    if (drawCount > Object.keys(propertyAssignments).length * 2) {
         finalContext.clearRect(0, 0, 1920, 1080);
         drawCount = 0;
     }
