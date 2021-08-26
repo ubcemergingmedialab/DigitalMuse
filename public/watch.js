@@ -187,19 +187,21 @@ const detectFaces = (video, counter, id) => {
         // for xPosition, etc., and then divide by height/width to get the new values.
         // A nice-to-have would recalculuate these positions and faceHeight when the window
         // resize event is triggered.
+        firstDraw = false;
         if (!propertyAssignments[id]) {
+            firstDraw = true;
             propertyAssignments[id] = imageProperties[currentImage][counter]
             console.log('assigning properties ' + JSON.stringify(propertyAssignments));
         }
         let desiredCenterX = propertyAssignments[id].xPosition * widthRatio;
         let desiredCenterY = propertyAssignments[id].yPosition * heightRatio;
         let desiredHeight = propertyAssignments[id].faceHeight * heightRatio;
-        videos[counter].style.display = "none"
-        const prediction = await models[id].estimateFaces({ input: video });
+        //videos[counter].style.display = "none"
+        const prediction = await model.estimateFaces({ input: video });
         let ctx = contexts[counter];
         let cw = canvases[counter].width;
         let ch = canvases[counter].height;
-        canvases[counter].style.display = "none";
+        //canvases[counter].style.display = "none";
         let region = new Path2D();
         ctx.clearRect(0, 0, cw, ch)
         prediction.forEach((prediction) => {
@@ -209,7 +211,7 @@ const detectFaces = (video, counter, id) => {
             let predictedWidth = prediction.boundingBox.bottomRight[0] - prediction.boundingBox.topLeft[0];
             let predictionRatio = predictedHeight / predictedWidth;
             let desiredWidth = desiredHeight / predictionRatio;
-            ctx.drawImage(video, 0, 0, cw, ch);
+            ctx.drawImage(video, 0, 0, 600, 400);
             const keypoints = prediction.annotations.silhouette;
             ctx.fillStyle = GREEN;
             for (let i = 0; i < keypoints.length; i++) {
@@ -225,24 +227,39 @@ const detectFaces = (video, counter, id) => {
             ctx.globalCompositeOperation = 'destination-in';
             ctx.fill(region);
             ctx.globalCompositeOperation = 'source-over';
-            finalContext.drawImage(canvases[counter], prediction.boundingBox.topLeft[0], (prediction.boundingBox.topLeft[1]) - 30, predictedWidth, predictedHeight, desiredCenterX, desiredCenterY, desiredWidth, desiredHeight)
-            drawCount++;
-            if (drawCount > Object.keys(videosByConnection).length * 10) {
-                canvasCleared = false;
+            propertyAssignments[id]['prediction'] = {
+                topLeftX: prediction.boundingBox.topLeft[0],
+                topLeftY: (prediction.boundingBox.topLeft[1]) - 30,
+                originWidth: predictedWidth,
+                originHeight: predictedHeight,
+                finalX: desiredCenterX,
+                finalY: desiredCenterY,
+                finalWidth: desiredWidth,
+                finalHeight: desiredHeight
             }
+            if(firstDraw) {
+                beginDrawingFace(canvases[counter], id)
+            }
+            //finalContext.drawImage(canvases[counter], prediction.boundingBox.topLeft[0], (prediction.boundingBox.topLeft[1]) - 30, predictedWidth, predictedHeight, desiredCenterX, desiredCenterY, desiredWidth, desiredHeight)
+
         });
         requestAnimationFrame(() => {
-            setTimeout(() => {
-                if (!canvasCleared) {
-                    finalContext.clearRect(0, 0, 1920, 1300);
-                    canvasCleared = true;
-                    drawCount = 0;
-                }
                 detectFaces(video, counter, id)()
-            }, 100)
-        }
-        );
+        });
     }
+}
+
+beginDrawingFace = function(canvas, id) {
+    drawCount++;
+    if (drawCount > Object.keys(propertyAssignments).length + 1) {
+        finalContext.clearRect(0, 0, 1920, 1080);
+        drawCount = 0;
+    }
+    predictionObject = propertyAssignments[id]['prediction'];
+    finalContext.drawImage(canvas, predictionObject.topLeftX, predictionObject.topLeftY, predictionObject.originWidth, predictionObject.originHeight, predictionObject.finalX, predictionObject.finalY, predictionObject.finalWidth, predictionObject.finalHeight)
+    requestAnimationFrame(() => {
+        beginDrawingFace(canvas, id);
+    });
 }
 
 handleSwapVideos = function () {
@@ -289,8 +306,8 @@ const handleJoinRoom = () => {
             videosByConnection[id] = videos[Object.keys(videosByConnection).length]
             videosByConnection[id].addEventListener("loadeddata", async () => {
                 await tf.ready();
-                if (!models[id]) {
-                    models[id] = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
+                if (!model) {
+                    model = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh);
                 }
                 console.log('calling detect faces ' + id);
                 requestAnimationFrame(detectFaces(videos[Object.keys(videosByConnection).length - 1], Object.keys(videosByConnection).length - 1, id)); // have to subtract one to keep counter correct after adding to videosByConnection // pass in id
