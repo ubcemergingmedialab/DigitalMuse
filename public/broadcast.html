@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Broadcaster</title>
+  <meta charset="UTF-8" />
+  <link href="/styles.css" rel="stylesheet">
+</head>
+<body>
+  <div class= "body-wrapper">  
+    <h3> Enter Participant ID  </h3>
+    <p> Your broadcaster ID should be given from the Host of your meeting.</p>    
+    <p>The host of your meeting is working on generating them...</p>    
+    <p> Meanwhile, please turn off your camera in the current meeting</p>    
+    
+		<div class= "input-wrapper">  
+      <input type="text" placeholder="input room name here" id="roomInput"/> 
+      <button type="button" id="start" class="button button2">Connect to Meeting</button>
+    </div>
+    
+    <video playsinline autoplay muted></video>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/broadcast.js"></script>
+
+  </div>
+</body>
+</html>

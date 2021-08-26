@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Viewer</title>
+	<meta charset="UTF-8" />
+	<link href="/styles.css" rel="stylesheet">
+</head>
+
+<body>
+	<div class= "body-wrapper">
+		
+		<h1 class="header-bottom-margin"> Connect with a Meeting </h1>
+		<div class="button-wrapper">
+		<input id="meetingURL" type="text" placeholder="Enter Meeting URL"> 
+		<a id="test" class="button button1" onClick={redirectLink}>Connect</a>
+		</div>
+	</div>
+</body>
+<script>
+	redirectLink = () => {
+		// var url = document.getElementById("meetingURL");
+		// console.log(url);
+		// window.location(url);
+		console.log("redirectLink");
+	};
+</script>
+</html>
