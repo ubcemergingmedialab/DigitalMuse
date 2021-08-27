@@ -93,14 +93,26 @@ body.watch .body-wrapper {
   height: 350px;
 }
 
-.text-button{
-  border: none;
-  background-color: whitesmoke;
-  padding: 14px 28px;
-  font-size: 16px;
-  cursor: pointer;
-  display: inline-block;
+.titles{ 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 }
+h4{
+  margin-right: 50px;
+}
+
+h5{
+  margin-right:355px;
+  margin-left: 300px;
+  font-size: 1em;
+}
+
+h6{
+  font-size: 1em;
+}
+
 .container1 {
   display: flex;
   flex-direction: row;
@@ -108,26 +120,12 @@ body.watch .body-wrapper {
   left: 50px;
 }
 
-.layer1 {
-  position: absolute;
-  background-color: black;
-  opacity: 80%;
-  width: 300px;
-  height: 200px;
-  left: 300px;
-  z-index: 10;
-}
-
 .salvador {
   position: absolute;
   left: 300px;
 }
 
-.container1:hover .layer1 {
- display:none;
-}
-
-.container1:active .salvador {
+.salvador.active{
   border: 3px solid;
   width:300px;
   height:200px;
@@ -140,26 +138,12 @@ body.watch .body-wrapper {
   left: 250px;
 }
 
-.layer2 {
-  position: absolute;
-  background-color: black;
-  opacity: 80%;
-  width: 300px;
-  height: 200px;
-  left: 550px;
-  z-index: 10;
-}
-
 .carnival {
   position: absolute;
   left: 550px;
 }
 
-.container2:hover .layer2 {
-  display: none;
-}
-
-.container2:active .carnival {
+.carnival.active{
   border: 3px solid;
   width:300px;
   height:200px;
@@ -172,26 +156,12 @@ body.watch .body-wrapper {
   right: 200px;
 }
 
-.layer3 {
-  position: absolute;
-  background-color: black;
-  opacity: 80%;
-  width: 300px;
-  height: 200px;
-  left: 100px;
-  z-index: 10;
-}
-
 .spaceship {
   position: absolute;
   left: 100px;
 }
 
-.container3:hover .layer3 {
-  display: none;
-}
-
-.container3:active .spaceship {
+.spaceship.active{
   border: 3px solid;
   width:300px;
   height:200px;
@@ -230,16 +200,8 @@ h3 {
   font-size: 2em;
 }
 
-h4 {
-  text-align: center;
-  text-transform: uppercase;
-  color: white;
-  z-index: 20;
-  margin-top: 90px;
-}
-
 .header-bottom-margin {
-  margin-bottom: 5em;
+  margin-bottom: 3em;
 }
 
 p {

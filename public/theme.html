@@ -13,35 +13,33 @@
             <h1 class="header-bottom-margin"> What Theme are you Feeling today?</h1>
         </div>
         
+        <div class= "titles">
+            <h4>Spaceship</h4>
+            <h5>Salvador Dali</h5>
+            <h6>Carnival</h6>
+        </div>
         
         <div class="img-wrapper">
 
-            <div class="container1" type="button">
-                <div class="salvador">
+            <div class="container1">
+                <div class="salvador image-border" onclick="HighlightHandler('.salvador')">
                     <img src = "salvador.jpg" alt = "Salvador Dali" width="300" height="200" onclick="ThemeHandler('salvador')">
                 </div>
-                
-                <div class="layer1">
-                    <h4>Salvador Dali</h4>
-                </div>
             </div>
+            <!-- <div class= "text1">Salvador Dali</div> -->
             
             <div class="container2">
-                <div class= "carnival">
+                <div class= "carnival image-border" onclick="HighlightHandler('.carnival')">
                     <img src = "carnival.jpg" alt = "Carnival" width="300" height="200" onclick="ThemeHandler('carnival')">
                 </div> 
-                <div class="layer2">
-                    <h4>Carnival</h4>
-                </div>
+                <!-- <h4>Carnival</h4> -->
             </div> 
     
             <div class="container3">
-                <div class= "spaceship">
+                <div class= "spaceship image-border" onclick="HighlightHandler('.spaceship')">
                     <img src = "spaceship.jpg" alt = "Spaceship" width="300" height="200" onclick="ThemeHandler('spaceship')" >
                 </div>
-                <div class="layer3">
-                    <h4>Spaceship</h4>
-                </div>
+                <!-- <h4>Spaceship</h4> -->
             </div>
         </div>
         
