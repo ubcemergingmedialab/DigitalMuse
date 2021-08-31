@@ -32,7 +32,6 @@ video {
   position: fixed;
   right: 0;
   top: 0;
-  -o-object-fit: contain;
   object-fit: contain;
 }
 
@@ -85,12 +84,33 @@ body.watch .body-wrapper {
 }
 
 #finalCanvas {
-  position: absolute;
+
+  position:absolute;
 }
 
 .img-wrapper {
   width: 1000px;
   height: 350px;
+}
+
+.titles{ 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+h4{
+  margin-right: 50px;
+}
+
+h5{
+  margin-right:355px;
+  margin-left: 300px;
+  font-size: 1em;
+}
+
+h6{
+  font-size: 1em;
 }
 
 .container1 {
@@ -100,23 +120,15 @@ body.watch .body-wrapper {
   left: 50px;
 }
 
-.layer1 {
-  position: absolute;
-  background-color: black;
-  opacity: 80%;
-  width: 300px;
-  height: 200px;
-  left: 300px;
-  z-index: 10;
-}
-
 .salvador {
   position: absolute;
   left: 300px;
 }
 
-.container1:hover .layer1 {
-  display: none;
+.salvador.active{
+  border: 3px solid;
+  width:300px;
+  height:200px;
 }
 
 .container2 {
@@ -126,23 +138,15 @@ body.watch .body-wrapper {
   left: 250px;
 }
 
-.layer2 {
-  position: absolute;
-  background-color: black;
-  opacity: 80%;
-  width: 300px;
-  height: 200px;
-  left: 550px;
-  z-index: 10;
-}
-
 .carnival {
   position: absolute;
   left: 550px;
 }
 
-.container2:hover .layer2 {
-  display: none;
+.carnival.active{
+  border: 3px solid;
+  width:300px;
+  height:200px;
 }
 
 .container3 {
@@ -152,84 +156,15 @@ body.watch .body-wrapper {
   right: 200px;
 }
 
-.layer3 {
-  position: absolute;
-  background-color: black;
-  opacity: 80%;
-  width: 300px;
-  height: 200px;
-  left: 100px;
-  z-index: 10;
-}
-
 .spaceship {
   position: absolute;
   left: 100px;
 }
 
-.container3:hover .layer3 {
-  display: none;
-}
-
-.salvador {
-  position: absolute;
-  left: 300px;
-}
-
-.container1:hover .layer1 {
-  display: none;
-}
-
-.container2 {
-  display: flex;
-  flex-direction: row;
-  position: relative;
-  left: 250px;
-}
-
-.layer2 {
-  position: absolute;
-  background-color: black;
-  opacity: 80%;
-  width: 300px;
-  height: 200px;
-  left: 550px;
-  z-index: 10;
-}
-
-.carnival {
-  position: absolute;
-  left: 550px;
-}
-
-.container2:hover .layer2 {
-  display: none;
-}
-
-.container3 {
-  display: flex;
-  flex-direction: row;
-  position: relative;
-  right: 200px;
-}
-
-.layer3 {
-  position: absolute;
-  background-color: black;
-  opacity: 80%;
-  width: 300px;
-  height: 200px;
-  left: 100px;
-  z-index: 10;
-}
-
-.spaceship {
-  position: absolute;
-  left: 100px;
-}
-
-.container3:hover .layer3 {
-  display: none;
+.spaceship.active{
+  border: 3px solid;
+  width:300px;
+  height:200px;
 }
 
 #canvas3 {
@@ -265,16 +200,8 @@ h3 {
   font-size: 2em;
 }
 
-h4 {
-  text-align: center;
-  text-transform: uppercase;
-  color: white;
-  z-index: 20;
-  margin-top: 90px;
-}
-
 .header-bottom-margin {
-  margin-bottom: 5em;
+  margin-bottom: 3em;
 }
 
 p {
@@ -313,11 +240,21 @@ p {
   background: linear-gradient(10deg, rgba(244, 218, 162, 1) 20%, rgba(255, 182, 71, 1) 67%)
 }
 
+.button:active{
+  padding: 9px 24px;
+  box-shadow: 3px 4px 4px rgba(0, 0, 0, 0.62);
+}
+
 /* Participant button */
 
 .button2 {
   background: rgb(255, 142, 121);
   background: linear-gradient(10deg, rgba(255, 142, 121, 1) 41%, rgba(251, 190, 160, 1) 91%);
+}
+
+.button2:active{
+  padding: 9px 24px;
+  box-shadow: 3px 4px 4px rgba(0, 0, 0, 0.62);
 }
 
 /* No underline link button */

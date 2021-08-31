@@ -180,7 +180,7 @@ function drawPath(ctx, points, closePath) {
 const detectFaces = (video, counter, id) => {
     return async function () {
         // if property assignments hasnt assigned current id, add current id property assignment from imageProperties[currentImage][counter]
-        
+
         // Catherine says:
         // The following 3 lines need to be changed to calculate xPosition, yPosition, and faceHeight
         // based on the height and width of #backdrop. We can take the pixel values supplied
@@ -214,7 +214,7 @@ const detectFaces = (video, counter, id) => {
             ctx.drawImage(video, 0, 0, 600, 400);
             const keypoints = prediction.annotations.silhouette;
             ctx.fillStyle = GREEN;
-            for (let i = 0; i < keypoints.length; i++) {
+            for (let i = 0; i < keypoints.length; i += 2) {
                 if (i == 0) {
                     region.moveTo((keypoints[i][0]), (keypoints[i][1]));
                     //ctx.stroke();
@@ -237,25 +237,23 @@ const detectFaces = (video, counter, id) => {
                 finalWidth: desiredWidth,
                 finalHeight: desiredHeight
             }
-            if(firstDraw) {
+            if (firstDraw) {
+                finalContext.clearRect(0,0,1920,1080)
                 beginDrawingFace(canvases[counter], id)
             }
             //finalContext.drawImage(canvases[counter], prediction.boundingBox.topLeft[0], (prediction.boundingBox.topLeft[1]) - 30, predictedWidth, predictedHeight, desiredCenterX, desiredCenterY, desiredWidth, desiredHeight)
 
         });
         requestAnimationFrame(() => {
-                detectFaces(video, counter, id)()
+            detectFaces(video, counter, id)()
         });
     }
 }
 
-beginDrawingFace = function(canvas, id) {
-    drawCount++;
-    if (drawCount > Object.keys(propertyAssignments).length * 2) {
-        finalContext.clearRect(0, 0, 1920, 1080);
-        drawCount = 0;
-    }
+beginDrawingFace = function (canvas, id) {
     predictionObject = propertyAssignments[id]['prediction'];
+    finalContext.clearRect(predictionObject.finalX, predictionObject.finalY, predictionObject.finalWidth, predictionObject.finalHeight);
+    console.log(predictionObject);
     finalContext.drawImage(canvas, predictionObject.topLeftX, predictionObject.topLeftY, predictionObject.originWidth, predictionObject.originHeight, predictionObject.finalX, predictionObject.finalY, predictionObject.finalWidth, predictionObject.finalHeight)
     requestAnimationFrame(() => {
         beginDrawingFace(canvas, id);
@@ -287,7 +285,11 @@ videos.forEach((video) => {
 
 
 const handleJoinRoom = () => {
-    finalCanvas.style.left = backdrop.style.marginLeft;
+
+    var rect = document.getElementById("backdrop").getBoundingClientRect();
+    finalCanvas.style.left = rect.left;
+    finalCanvas.style.width = document.getElementById("backdrop").style.width;
+    console.log(rect.top, rect.right, rect.bottom, rect.left);
 
     const socket = io.connect(window.location.origin);
     const roomName = document.getElementById("roomInput").value
